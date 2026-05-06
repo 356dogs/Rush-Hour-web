@@ -6,26 +6,23 @@ const fs = require('fs');
 const app = express();
 const PORT = 3000;
 
-// Middleware
+// ====================== MIDDLEWARE ======================
 app.use(cors());
 app.use(express.json());
 
-// Servir tous les fichiers du dossier public
+// Servir tous les fichiers du dossier public (HTML, CSS, JS, images...)
 app.use(express.static(path.join(process.cwd(), 'public')));
 
-// Route par défaut : si on va sur / → on sert index.html
+// Route par défaut
 app.get('/', (req, res) => {
     res.sendFile(path.join(process.cwd(), 'public/index.html'));
 });
 
-// ====================== API ======================
-
-// Générer une map aléatoire
+// ====================== API MAP ======================
 app.get('/api/map', (req, res) => {
     const difficulty = req.query.diff || 'medium';
     const gridSize = difficulty === 'hard' ? 8 : difficulty === 'medium' ? 7 : 6;
 
-    // Pour l’instant : map très simple 
     const map = {
         gridSize: gridSize,
         cars: [
@@ -39,52 +36,91 @@ app.get('/api/map', (req, res) => {
     res.json(map);
 });
 
-// Gestion des scores
+// ====================== SCORES ======================
 const scoresPath = path.join(process.cwd(), 'server/data/scores.json');
 
-// Créer le dossier data s’il n’existe pas
-if (!fs.existsSync(path.join(process.cwd(), 'server/data'))) {
-    fs.mkdirSync(path.join(process.cwd(), 'server/data'), { recursive: true });
-}
-
-app.get('/api/scores', (req, res) => {
+// Initialisation du fichier scores
+function initScoresFile() {
+    const dir = path.dirname(scoresPath);
+    if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+    }
     if (!fs.existsSync(scoresPath)) {
-        fs.writeFileSync(scoresPath, '[]');
+        fs.writeFileSync(scoresPath, '[]', 'utf-8');
     }
-    const scores = JSON.parse(fs.readFileSync(scoresPath, 'utf-8'));
-    res.json(scores);
+}
+initScoresFile();
+
+// Récupérer les scores
+app.get('/api/scores', (req, res) => {
+    try {
+        const scores = JSON.parse(fs.readFileSync(scoresPath, 'utf-8'));
+        res.json(scores);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Erreur lors de la lecture des scores" });
+    }
 });
 
+// Ajouter un score
 app.post('/api/scores', (req, res) => {
-    const { playerName, score, time, difficulty } = req.body;
+    try {
+        const { playerName, score, time, difficulty, moves } = req.body;
 
-    if (!playerName || score === undefined) {
-        return res.status(400).json({ error: "Données manquantes" });
+        if (!playerName || score === undefined || !time || !difficulty) {
+            return res.status(400).json({ error: "Données incomplètes" });
+        }
+
+        let scores = JSON.parse(fs.readFileSync(scoresPath, 'utf-8'));
+
+        const newScore = {
+            id: Date.now(),
+            playerName: playerName.trim(),
+            score: Number(score),
+            time: time,
+            moves: moves || 0,
+            difficulty: difficulty,
+            date: new Date().toISOString()
+        };
+
+        scores.push(newScore);
+
+        // Tri : meilleur score d'abord, puis meilleur temps
+        scores.sort((a, b) => {
+            if (b.score !== a.score) return b.score - a.score;
+            return a.time.localeCompare(b.time);
+        });
+
+        scores = scores.slice(0, 100);
+
+        fs.writeFileSync(scoresPath, JSON.stringify(scores, null, 2));
+
+        res.status(201).json({ 
+            message: 'Score sauvegardé avec succès !',
+            position: scores.findIndex(s => s.id === newScore.id) + 1
+        });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Erreur serveur" });
     }
-
-    let scores = [];
-    if (fs.existsSync(scoresPath)) {
-        scores = JSON.parse(fs.readFileSync(scoresPath, 'utf-8'));
-    }
-
-    scores.push({
-        playerName,
-        score: Number(score),
-        time,
-        difficulty,
-        date: new Date().toISOString()
-    });
-
-    // Trier et garder les 50 meilleurs
-    scores.sort((a, b) => b.score - a.score);
-    scores = scores.slice(0, 50);
-
-    fs.writeFileSync(scoresPath, JSON.stringify(scores, null, 2));
-    res.json({ message: 'Score sauvegardé avec succès !' });
 });
 
+// Supprimer tous les scores (utile pendant le développement)
+app.delete('/api/scores', (req, res) => {
+    try {
+        fs.writeFileSync(scoresPath, '[]');
+        res.json({ message: 'Tous les scores ont été supprimés' });
+    } catch (error) {
+        res.status(500).json({ error: "Erreur lors de la suppression" });
+    }
+});
+
+// ====================== LANCER LE SERVEUR ======================
 app.listen(PORT, () => {
-    console.log(`🚗 Serveur Rush Hour Web lancé sur http://localhost:${PORT}`);
-    console.log(`   → Menu : http://localhost:${PORT}`);
-    console.log(`   → API Map : http://localhost:${PORT}/api/map?diff=medium`);
+    console.log(`🚗 Serveur Rush Hour Web lancé avec succès !`);
+    console.log(`   → http://localhost:${PORT}`);
+    console.log(`   → Menu          : http://localhost:${PORT}`);
+    console.log(`   → Map           : http://localhost:${PORT}/api/map?diff=medium`);
+    console.log(`   → Scores        : http://localhost:${PORT}/api/scores`);
 });
