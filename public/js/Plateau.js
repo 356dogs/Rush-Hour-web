@@ -53,6 +53,12 @@ class Plateau {
                 const nouvCase = document.createElement("div");
                 nouvCase.classList.add("case");
                 nouvCase.id = "case" + x + "-" + y;
+                const elem = document.createElement("img");
+                elem.setAttribute("src", "/public/assets/casePlaceholder.png");
+                elem.setAttribute("height", "150");
+                elem.setAttribute("width", "150");
+
+                nouvCase.appendChild(elem);
                 nouvLigne.appendChild(nouvCase);
 
                 let cell = new Case(compteur, x, y, nouvCase);

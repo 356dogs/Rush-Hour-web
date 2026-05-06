@@ -7,15 +7,10 @@ class Vehicule {
         this.case = null;
     }
 
-    deplacmentVoiture(direction)
+    deplacmentVoiture(direction,nbCases)
     {
-        
+
     }
-
-
-
-
-
 }
 // partieVehicule : chiffre commençant à 0 (commence a la tête du vehicule et augmente a chaque partie du vehicule) 
 let voitureRouge1 = new Vehicule(1, "horizontal", 0);
