@@ -25,7 +25,7 @@ app.get('/api/map', (req, res) => {
     const difficulty = req.query.diff || 'medium';
     const gridSize = difficulty === 'hard' ? 8 : difficulty === 'medium' ? 7 : 6;
 
-    // Pour l’instant : map très simple (tu l’amélioreras plus tard)
+    // Pour l’instant : map très simple 
     const map = {
         gridSize: gridSize,
         cars: [
