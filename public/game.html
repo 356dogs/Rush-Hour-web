@@ -10,5 +10,14 @@
     <div id="plateauDeJeu">
     </div>
     <button onclick="alert('Test du jeu')">Tester déplacement voiture</button>
+    <script type="module">
+        import { grilleCustom1 } from './js/Plateau.js';
+
+        const grille = grilleCustom1();
+        console.log(grille);
+        grille.creationGrille(document.getElementById('plateauDeJeu'));
+        console.log(grille);
+    </script>
 </body>
+
 </html>
