@@ -5,13 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rush Hour Web</title>
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        header {
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+    </style>
 </head>
 <body>
-    <h1>🚗 Rush Hour Web - Menu</h1>
-    <p>Bienvenue dans le jeu !</p>
-    <a href="game.html">Jouer</a><br>
-    <a href="scores.html">Tableau des scores</a>
-    
+    <video autoplay muted loop style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; object-fit: cover;"><source src="assets/redCarGIF.mp4" type="video/mp4"></video>
+    <header>
+        <!-- Aligner tous les éléments du header -->
+        <img src="assets/INSA.png" alt="INSA Logo" style="width: 100px; height: auto; ">
+        <img src="assets/UPHF.png" alt="UPHF Logo" style="width: 100px; height: auto;">
+        <h1>🚗 Rush Hour Web</h1>
+        <button id="scoresButton" style="padding: 10px 20px; font-size: 18px; cursor: pointer;"><a href="scores.html">SCOREBOARD</a></button>
+
+    </header><br>
+    <main style="text-align: center; margin: 50px; background-color: rgba(255, 255, 255, 0.8); padding: 20px; border-radius: 10px;">
+        <!-- Bouton pour accéder à la grille de jeu, peut-être le rendre plus arrondi, plus grand et avec un effet de survol ? -->
+        <div style="display: flex; justify-content: center; gap: 50%; background-color: rgba(255, 255, 255, 0.8); padding: 20px; border-radius: 10px;">
+            <button id="playButton" style="padding: 10px 20px; font-size: 18px; cursor: pointer;"><a href="game.html">PLAY</a></button>
+        </div>
+        <h2 style="margin-top: 20px;"> 🚗 Prêt à sortir du parking ? 🚗</h2>
+        <p style="font-size: 24px; margin-top: 20px;">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eleifend vehicula leo, porttitor posuere dolor. Nam maximus mattis diam feugiat lobortis. Interdum et malesuada fames ac ante ipsum primis in faucibus. Cras ac lectus varius, ultrices justo non, blandit dolor. Fusce luctus tincidunt dignissim. Nulla a risus interdum, gravida dui sed, placerat magna. Quisque eget lorem convallis, efficitur massa eu, pretium felis.
+            Aliquam vestibulum consectetur sagittis. Sed tempus ullamcorper auctor. Sed nec massa non turpis malesuada aliquam. Etiam faucibus orci nec augue interdum, ut tincidunt erat congue. Integer venenatis nibh quis justo venenatis sagittis. In vel mauris vitae quam tincidunt euismod. Suspendisse urna nulla, porta eu mollis sed, luctus sit amet metus. Suspendisse potenti. Curabitur sit amet lectus maximus, volutpat urna at, ullamcorper lectus.
+        </p>
+        <a href="https://github.com/356dogs/Rush-Hour-web" target="_blank">
+            <img src="assets/GitHub.png" alt="GitHub Logo" style="width: 100px; height: auto; margin-top: 20px;">
+        </a>
+    </main>
+    <footer style="text-align: center; margin-top: 20px; background-color: rgba(255, 255, 255, 0.8);">
+        <p>&copy; 2026 Rush Hour Web. Tous droits réservés.</p>
+        <p>Réalisé par BANCKEMAN Dimitry, BONIFACE Vince, BURLET Lou-Anne, FALL Diamil</p>
+    </footer>
     <script src="js/menu.js"></script>
 </body>
 </html>
