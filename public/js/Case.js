@@ -16,7 +16,9 @@ export class Case {
     estVide() {
         return this.vehicule === null;
     }
-    
 
+    voisinExiste(attributDirection) {
+        return this[attributDirection] !== null;
+    }
 }
 

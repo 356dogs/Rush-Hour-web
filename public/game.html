@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Rush Hour - Jeu</title>
+    <link rel="stylesheet" href="./css/style.css">
 </head>
 <body>
     <h1>Jeu Rush Hour (en construction)</h1>
@@ -12,11 +13,14 @@
     <button onclick="alert('Test du jeu')">Tester déplacement voiture</button>
     <script type="module">
         import { grilleCustom1 } from './js/Plateau.js';
+        import { vehicules } from './js/Vehicule.js';
 
         const grille = grilleCustom1();
         console.log(grille);
         grille.creationGrille(document.getElementById('plateauDeJeu'));
+        grille.creationVoisinage();
         console.log(grille);
+        grille.ajouterVehicule(vehicules[0], 2, 0, 'Nord');
     </script>
 </body>
 
