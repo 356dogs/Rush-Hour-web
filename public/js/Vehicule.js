@@ -1,19 +1,18 @@
 class Vehicule {
-    constructor(id, partieVehicule) {
+    constructor(id, taille) {
         this.id = id;
+        this.taille = taille; // nombre de cases occupées par le véhicule
         this.orientation = null; //axe vers lequel la tête du véhicule est orienté (Nord, Sud, Est, Ouest)
-        this.partieVehicule = partieVehicule;
-        this.image = "images/vehiculeImageTest.png";
-        this.case = null;
-        this.vehiculecomplet;
+        this.image = null;
+        this.cases = []; // la première et la dernière case sur laquelle le véhicule est placé
     }
 
     etudeDeplacementPossible()
     {
         // regarde les déplacements possibles et active les cases correspondante
-        let axe1 = this.vehiculecomplet[0].case // tête du véhicule
-        let axe2 = this.vehiculecomplet[this.vehiculecomplet.length - 1].case // queue du véhicule
-        
+        let axe1 = this.cases[0]; // tête du véhicule
+        let axe2 = this.cases[this.cases.length - 1]; // queue du véhicule
+
         let directions = {
             "Nord": { avant: "Nord", arriere: "Sud" },
             "Sud": { avant: "Sud", arriere: "Nord" },
@@ -36,40 +35,44 @@ class Vehicule {
         }
     }
 
-    deplacerVehicule(vehiculeATete, caseDestination) {    
+    deplacerVehicule(vehiculeSelectionne, caseDestination) {    
         // déplacer le véhicule a la case de destination 
         // quatre  cas de figure (la case est devant ou derrière le véhicule) et (le véhicule est orienté vers le nord/sud ou est/ouest)
-        vehiculeATete.case.vehicule = null;
-        
-        // a finir
+        if(this.orientation === "Nord" || this.orientation === "Sud")
+        {
+            if(caseDestination.x > vehiculeSelectionne.cases[0].x) // tête vas sur la case de destination
+            
+
 
         
-        // Placer le véhicule à la nouvelle case
-        vehiculeATete.case = caseDestination;
-        caseDestination.vehicule = vehiculeATete;
         
-        return true;
-    }  
+        vehiculeSelectionne.cases[0].vehicule = null; // on libère la case de départ
+        vehiculeSelectionne.cases[0] = null;
+        vehiculeSelectionne.cases[0] = caseDestination;
+        caseDestination.vehicule = vehiculeSelectionne;
+
+        vehiculeSelectionne.cases[1].vehicule = null; // casse la liaison avec le vehicule de la case
+        vehiculeSelectionne.cases[1] = null;
+        vehiculeSelectionne.cases[1] = caseDestination.voisinSud;
+        caseDestination = caseDestination.voisinSud;
+        caseDestination.vehicule = vehiculeSelectionne; // crée la liaison avec la nouvelle case
+    
+        }
+    }
+    
+    
+
+
 }
 
-
-
 // partieVehicule : chiffre commençant à 0 (commence a la tête du vehicule et augmente a chaque partie du vehicule) 
-let voitureRougePartie1 = new Vehicule(0, 0);
-let voitureRougePartie2 = new Vehicule(1, 1);
-
-let voitureRouge = [voitureRougePartie1, voitureRougePartie2];
+let voitureRouge = new Vehicule(0, 2);
 
 let vehicules = [voitureRouge];
 
 // Associer chaque partie du véhicule à l'ensemble du véhicule
-for (let i = 0; i < vehicules.length; i++) {
-    for (let j = 0; j < vehicules[i].length; j++) {
-        vehicules[i][j].vehiculecomplet = vehicules[i];
-    }
-}
 
-export { Vehicule, vehicules };
+export { Vehicule, vehicules};
 
 
 

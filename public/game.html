@@ -15,7 +15,7 @@
         import { grilleCustom1 } from './js/Plateau.js';
         import { vehicules } from './js/Vehicule.js';
 
-        const grille = grilleCustom1();
+        const grille = grilleCustom1(vehicules);
         console.log(grille);
         grille.creationGrille(document.getElementById('plateauDeJeu'));
         grille.creationVoisinage();
