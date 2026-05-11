@@ -10,7 +10,7 @@ const PORT = 3000;
 app.use(cors());
 app.use(express.json());
 
-// Servir tous les fichiers du dossier public (HTML, CSS, JS, images...)
+// Servir tous les fichiers du dossier public 
 app.use(express.static(path.join(process.cwd(), 'public')));
 
 // Route par défaut
@@ -18,23 +18,6 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(process.cwd(), 'public/index.html'));
 });
 
-// ====================== API MAP ======================
-app.get('/api/map', (req, res) => {
-    const difficulty = req.query.diff || 'medium';
-    const gridSize = difficulty === 'hard' ? 8 : difficulty === 'medium' ? 7 : 6;
-
-    const map = {
-        gridSize: gridSize,
-        cars: [
-            { id: 1, row: 0, col: 0, length: 2, direction: 'horizontal', color: 'red' },
-            { id: 2, row: 2, col: 1, length: 3, direction: 'vertical', color: 'blue' },
-            { id: 3, row: 4, col: 3, length: 2, direction: 'horizontal', color: 'green' }
-        ],
-        exit: { row: 2, col: gridSize - 1 }
-    };
-
-    res.json(map);
-});
 
 // ====================== SCORES ======================
 const scoresPath = path.join(process.cwd(), 'server/data/scores.json');
@@ -106,7 +89,7 @@ app.post('/api/scores', (req, res) => {
     }
 });
 
-// Supprimer tous les scores (utile pendant le développement)
+// Supprimer tous les scores 
 app.delete('/api/scores', (req, res) => {
     try {
         fs.writeFileSync(scoresPath, '[]');
@@ -118,7 +101,7 @@ app.delete('/api/scores', (req, res) => {
 
 // ====================== LANCER LE SERVEUR ======================
 app.listen(PORT, () => {
-    console.log(`🚗 Serveur Rush Hour Web lancé avec succès !`);
+    console.log(`Serveur Rush Hour Web lancé avec succès !`);
     console.log(`   → http://localhost:${PORT}`);
     console.log(`   → Menu          : http://localhost:${PORT}`);
     console.log(`   → Map           : http://localhost:${PORT}/api/map?diff=medium`);
