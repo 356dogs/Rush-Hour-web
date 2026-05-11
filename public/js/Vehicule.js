@@ -36,32 +36,50 @@ class Vehicule {
     }
 
     deplacerVehicule(vehiculeSelectionne, caseDestination) {    
-        // déplacer le véhicule a la case de destination 
-        // quatre  cas de figure (la case est devant ou derrière le véhicule) et (le véhicule est orienté vers le nord/sud ou est/ouest)
-        if(this.orientation === "Nord" || this.orientation === "Sud")
+        // déplacer le véhicule a la case de destination.
+        let nbDeplacements;
+        let direction;
+        [direction, nbDeplacements] = this.calculDeplacementNecessaire(caseDestination);
+        
+        for(let i = 0; i < this.cases.length; i++) {
+        for (let i = 0; i < nbDeplacements; i++) {
+            this.cases[i]
+    }
+
+    calculDeplacementNecessaire(caseDestination)
+    {
+        //on calcul la distance entre la case et ses extremitées pour savoir dans quel sens la case
+        //calcul la valeur absolue du nombre de déplacements et l'orientation du déplacement pour atteindre la case de destination
+        let nbCasesDeplacementTete;
+        let nbCasesDeplacementQueue;        
+        if(this.orientation === "Nord" || this.orientation === "Sud") //seul le x nous intéresse
         {
-            if(caseDestination.x > vehiculeSelectionne.cases[0].x) // tête vas sur la case de destination
-            
+            nbCasesDeplacementTete = Math.abs(this.cases[0].x - caseDestination.x);
+            nbCasesDeplacementQueue = Math.abs(this.cases[this.cases.length - 1].x - caseDestination.x);
 
-
-        
-        
-        vehiculeSelectionne.cases[0].vehicule = null; // on libère la case de départ
-        vehiculeSelectionne.cases[0] = null;
-        vehiculeSelectionne.cases[0] = caseDestination;
-        caseDestination.vehicule = vehiculeSelectionne;
-
-        vehiculeSelectionne.cases[1].vehicule = null; // casse la liaison avec le vehicule de la case
-        vehiculeSelectionne.cases[1] = null;
-        vehiculeSelectionne.cases[1] = caseDestination.voisinSud;
-        caseDestination = caseDestination.voisinSud;
-        caseDestination.vehicule = vehiculeSelectionne; // crée la liaison avec la nouvelle case
-    
+            if(nbCasesDeplacementQueue < nbCasesDeplacementTete)
+            {
+                return ["voisinNord", nbCasesDeplacementTete];
+            }
+            else
+            {
+                return ["voisinSud", nbCasesDeplacementQueue];
+            }
+        }
+        else //seul le y nous intéresse
+        {
+            nbCasesDeplacementTete = Math.abs(this.cases[0].y - caseDestination.y);
+            nbCasesDeplacementQueue = Math.abs(this.cases[this.cases.length - 1].y - caseDestination.y);
+            if(nbCasesDeplacementQueue < nbCasesDeplacementTete)
+            {
+                return ["voisinOuest", nbCasesDeplacementTete];
+            }
+            else
+            {
+                return ["voisinEst", nbCasesDeplacementQueue];
+            }
         }
     }
-    
-    
-
 
 }
 
