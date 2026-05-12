@@ -82,8 +82,9 @@ main {
 /* Bloc Description (Cadre blanc semi-transparent) */
 .description-box {
     background: rgba(255, 255, 255, 0.9);
-    padding: 25px 40px;
+    padding: 25px;
     border-radius: 15px;
+    width: 90%;
     max-width: 600px;
     text-align: center;
     box-shadow: 0 10px 30px rgba(0,0,0,0.3);
@@ -188,4 +189,44 @@ body {
 .description-box p {
     font-size: 24px;
     margin-top: 20px;
+}
+
+@media (max-width: 768px) {
+    header {
+        flex-direction: column; /* Empile les éléments du header verticalement */
+        gap: 10px;
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: 1.5rem; /* Réduit la taille du titre */
+    }
+
+    .header-left, .header-right {
+        min-width: auto; /* Annule le centrage forcé pour laisser de la place */
+    }
+
+    .btn-play {
+        padding: 15px 40px; /* Bouton un peu plus petit sur mobile */
+        font-size: 20px;
+    }
+
+    .description-box p {
+        font-size: 16px; /* Texte plus lisible sur petit écran */
+    }
+}
+
+
+/* Si l'écran est plus petit que la grille de jeu */
+@media (max-width: 650px) {
+    #plateauDeJeu {
+        transform: scale(0.8); /* Réduit la taille visuelle de la grille */
+        transform-origin: center;
+    }
+}
+
+@media (max-width: 480px) {
+    #plateauDeJeu {
+        transform: scale(0.6); /* Encore plus petit pour les mini écrans */
+    }
 }
