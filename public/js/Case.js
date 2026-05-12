@@ -1,4 +1,4 @@
-export class Case {
+class Case {
     constructor(id, x, y, divCase) {
         this.id = id;
         this.x = x;
@@ -11,6 +11,7 @@ export class Case {
         this.divCase = divCase;
         this.caseVictoire = false;
         this.caseHighlight = false;
+        this.highlightImg = null;
     }
     
     estVide() {
@@ -19,6 +20,13 @@ export class Case {
 
     voisinExiste(attributDirection) {
         return this[attributDirection] !== null;
+    }
+
+    setHighlightVisible(visible) {
+        this.caseHighlight = visible;
+        if (this.highlightImg) {
+            this.highlightImg.style.display = visible ? 'block' : 'none';
+        }
     }
 }
 

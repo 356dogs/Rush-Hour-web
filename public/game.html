@@ -11,16 +11,19 @@
     <div id="plateauDeJeu">
     </div>
     <button onclick="alert('Test du jeu')">Tester déplacement voiture</button>
-    <script type="module">
-        import { grilleCustom1 } from './js/Plateau.js';
-        import { vehicules } from './js/Vehicule.js';
-
+    <script src="./js/Case.js"></script>
+    <script src="./js/Vehicule.js"></script>
+    <script src="./js/Plateau.js"></script>
+    <script>
         const grille = grilleCustom1(vehicules);
         console.log(grille);
         grille.creationGrille(document.getElementById('plateauDeJeu'));
         grille.creationVoisinage();
         console.log(grille);
-        grille.ajouterVehicule(vehicules[0], 2, 0, 'Nord');
+        console.log(grille.listeVehicules);
+        grille.ajouterVehicule(0, 2, 3, 'Nord');
+        grille.ajouterVehicule(1, 1, 1, 'Sud');
+        grille.vehiculeselectionne = vehicules[0];
     </script>
 </body>
 

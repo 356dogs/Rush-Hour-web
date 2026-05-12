@@ -5,6 +5,10 @@ class Vehicule {
         this.orientation = null; //axe vers lequel la tête du véhicule est orienté (Nord, Sud, Est, Ouest)
         this.image = null;
         this.cases = []; // la première et la dernière case sur laquelle le véhicule est placé
+
+        for (let i = 0; i < taille; i++) {
+            this.cases.push(null);
+        }
     }
 
     etudeDeplacementPossible()
@@ -31,19 +35,70 @@ class Vehicule {
         let attributVoisin = "voisin" + direction;
         while (caseActuelle.voisinExiste(attributVoisin) && caseActuelle[attributVoisin].estVide()) {
             caseActuelle = caseActuelle[attributVoisin];
-            caseActuelle.caseHighlight = true;
+            caseActuelle.setHighlightVisible(true);
         }
     }
 
-    deplacerVehicule(vehiculeSelectionne, caseDestination) {    
-        // déplacer le véhicule a la case de destination.
-        let nbDeplacements;
-        let direction;
-        [direction, nbDeplacements] = this.calculDeplacementNecessaire(caseDestination);
-        
-        for(let i = 0; i < this.cases.length; i++) {
-        for (let i = 0; i < nbDeplacements; i++) {
-            this.cases[i]
+    initImgVehicule(container) {
+        if (this.image) {
+            return;
+        }
+        const img = document.createElement('img');
+        img.classList.add('vehicule');
+        img.src = './assets/vehicule' + this.id + '.png';
+        img.style.position = 'absolute';
+        img.style.pointerEvents = 'none';
+        img.style.transition = 'transform 0.75s ease-in-out ';
+        img.style.transformOrigin = 'top left';
+        container.appendChild(img);
+        this.image = img;
+        this.container = container;
+    }
+
+    updateDOMPosition() {
+        if (!this.image || !this.cases[0]) {
+            return;
+        }
+        const allXs = this.cases.map(c => c.x);
+        const allYs = this.cases.map(c => c.y);
+        const minX = Math.min(...allXs);
+        const minY = Math.min(...allYs);
+        const anchorCase = this.cases.find(c => c.x === minX && c.y === minY);
+        if (!anchorCase) {
+            return;
+        }
+
+        const caseRect = anchorCase.divCase.getBoundingClientRect();
+        const parentRect = this.container.getBoundingClientRect();
+        const offsetX = caseRect.left - parentRect.left;
+        const offsetY = caseRect.top - parentRect.top;
+
+        const width = (this.orientation === 'Est' || this.orientation === 'Ouest') ? this.taille * anchorCase.divCase.offsetWidth : anchorCase.divCase.offsetWidth;
+        const height = (this.orientation === 'Nord' || this.orientation === 'Sud') ? this.taille * anchorCase.divCase.offsetHeight : anchorCase.divCase.offsetHeight;
+
+        this.image.style.width = width + 'px';
+        this.image.style.height = height + 'px';
+        this.image.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+    }
+
+    deplacerVehicule(caseDestination) {
+        // déplacer le véhicule à la case de destination.
+        const [direction, nbDeplacements] = this.calculDeplacementNecessaire(caseDestination);
+
+        for (let i = 0; i < this.cases.length; i++) {
+            this.cases[i].vehicule = null;
+        }
+        for (let i = 0; i < this.cases.length; i++) {
+            let caseActuelle = this.cases[i];
+            for (let pas = 0; pas < nbDeplacements; pas++) {
+                caseActuelle = caseActuelle[direction];
+            }
+            this.cases[i] = caseActuelle;
+        }
+        for (let i = 0; i < this.cases.length; i++) {
+            this.cases[i].vehicule = this;
+        }
+        this.updateDOMPosition();
     }
 
     calculDeplacementNecessaire(caseDestination)
@@ -52,12 +107,12 @@ class Vehicule {
         //calcul la valeur absolue du nombre de déplacements et l'orientation du déplacement pour atteindre la case de destination
         let nbCasesDeplacementTete;
         let nbCasesDeplacementQueue;        
-        if(this.orientation === "Nord" || this.orientation === "Sud") //seul le x nous intéresse
+        if(this.orientation === "Nord") //seul le x nous intéresse
         {
             nbCasesDeplacementTete = Math.abs(this.cases[0].x - caseDestination.x);
             nbCasesDeplacementQueue = Math.abs(this.cases[this.cases.length - 1].x - caseDestination.x);
 
-            if(nbCasesDeplacementQueue < nbCasesDeplacementTete)
+            if(nbCasesDeplacementTete < nbCasesDeplacementQueue)
             {
                 return ["voisinNord", nbCasesDeplacementTete];
             }
@@ -66,11 +121,36 @@ class Vehicule {
                 return ["voisinSud", nbCasesDeplacementQueue];
             }
         }
-        else //seul le y nous intéresse
+        else if(this.orientation === "Sud") //seul le x nous intéresse
+        {
+            nbCasesDeplacementTete = Math.abs(this.cases[0].x - caseDestination.x);
+            nbCasesDeplacementQueue = Math.abs(this.cases[this.cases.length - 1].x - caseDestination.x);
+            if(nbCasesDeplacementTete < nbCasesDeplacementQueue)
+            {
+                return ["voisinSud", nbCasesDeplacementTete];
+            }
+            else
+            {
+                return ["voisinNord", nbCasesDeplacementQueue];
+            }
+        }
+        else if(this.orientation === "Est") //seul le y nous intéresse
         {
             nbCasesDeplacementTete = Math.abs(this.cases[0].y - caseDestination.y);
             nbCasesDeplacementQueue = Math.abs(this.cases[this.cases.length - 1].y - caseDestination.y);
-            if(nbCasesDeplacementQueue < nbCasesDeplacementTete)
+            if(nbCasesDeplacementQueue > nbCasesDeplacementTete)
+            {
+                return ["voisinEst", nbCasesDeplacementTete];
+            }
+            else{
+                return ["voisinOuest", nbCasesDeplacementQueue];
+            }
+        }
+        else //Ouest seul le y nous intéresse
+        {
+            nbCasesDeplacementTete = Math.abs(this.cases[0].y - caseDestination.y);
+            nbCasesDeplacementQueue = Math.abs(this.cases[this.cases.length - 1].y - caseDestination.y);
+            if(nbCasesDeplacementQueue > nbCasesDeplacementTete)
             {
                 return ["voisinOuest", nbCasesDeplacementTete];
             }
@@ -81,16 +161,15 @@ class Vehicule {
         }
     }
 
+
+
 }
 
-// partieVehicule : chiffre commençant à 0 (commence a la tête du vehicule et augmente a chaque partie du vehicule) 
-let voitureRouge = new Vehicule(0, 2);
+// partieVehicule : chiffre commençant à 0 (commence a la tête du véhicule et augmente a chaque partie du véhicule)
+var voitureRouge = new Vehicule(0, 2);
+var voitureBleue = new Vehicule(1, 2);
 
-let vehicules = [voitureRouge];
-
-// Associer chaque partie du véhicule à l'ensemble du véhicule
-
-export { Vehicule, vehicules};
+var vehicules = [voitureRouge,voitureBleue];
 
 
 
