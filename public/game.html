@@ -6,10 +6,25 @@
     <link rel="stylesheet" href="./css/style.css">
 </head>
 <body>
-    <h1>Jeu Rush Hour (en construction)</h1>
-    <p>Dimitry va mettre le canvas/grille ici.</p>
+    <aside>
+        <div>
+            <button id ="homeButton"><a href="index.html">HOME</a></button>
+            
+            <a href="https://www.groupe-insa.fr/" target="_blank">
+                <img src="assets/INSA.png" alt="Logo INSA" style="width: 100px; height: auto; ">
+            </a>
+            
+            <a href="https://www.uphf.fr/" target="_blank">
+                <img src="assets/UPHF.png" alt="Logo UPHF" style="width: 100px; height: auto;">
+            </a>
+            <a href="https://github.com/356dogs/Rush-Hour-web" target="_blank">
+                <img src="assets/GitHub.png" alt="GitHub Logo" style="width: 100px; height: auto; margin-top: 20px;">
+            </a>
+        </div>
+    </aside>
     <div id="plateauDeJeu">
     </div>
+ 
     <button onclick="alert('Test du jeu')">Tester déplacement voiture</button>
     <script type="module">
         import { grilleCustom1 } from './js/Plateau.js';
