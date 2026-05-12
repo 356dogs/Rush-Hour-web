@@ -193,40 +193,39 @@ body {
 
 @media (max-width: 768px) {
     header {
-        flex-direction: column; /* Empile les éléments du header verticalement */
+        flex-direction: column; 
         gap: 10px;
         padding: 10px;
     }
 
     h1 {
-        font-size: 1.5rem; /* Réduit la taille du titre */
+        font-size: 1.5rem; 
     }
 
     .header-left, .header-right {
-        min-width: auto; /* Annule le centrage forcé pour laisser de la place */
+        min-width: auto;
     }
 
     .btn-play {
-        padding: 15px 40px; /* Bouton un peu plus petit sur mobile */
+        padding: 15px 40px; 
         font-size: 20px;
     }
 
     .description-box p {
-        font-size: 16px; /* Texte plus lisible sur petit écran */
+        font-size: 16px; 
     }
 }
 
 
-/* Si l'écran est plus petit que la grille de jeu */
 @media (max-width: 650px) {
     #plateauDeJeu {
-        transform: scale(0.8); /* Réduit la taille visuelle de la grille */
+        transform: scale(0.8); 
         transform-origin: center;
     }
 }
 
 @media (max-width: 480px) {
     #plateauDeJeu {
-        transform: scale(0.6); /* Encore plus petit pour les mini écrans */
+        transform: scale(0.6); 
     }
 }
