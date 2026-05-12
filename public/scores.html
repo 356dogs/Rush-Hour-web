@@ -7,6 +7,10 @@
     <link rel="stylesheet" href="./css/style.css">
 </head>
 <body>
+    <video autoplay muted loop class="video-bg">
+        <source src="assets/redCarGIF.mp4" type="video/mp4">
+    </video>
+    
     <header>
         <div class="header-left">
             <a href="https://www.groupe-insa.fr/" target="_blank">
@@ -18,41 +22,41 @@
         </div>
         <h1>🚗 Rush Hour Web</h1>
         <div class="header-right">
-            <button id="home"><a href="index.html">HOME</a></button>
+            <button class="nav-button"><a href="index.html">HOME</a></button>
         </div>
     </header>
-    <h1>🏆 Meilleurs scores</h1>
-    <main id="scoresTable">
-        <table>
-            <thead>
-                <tr>
-                    <th>Rang</th>
-                    <th>ID Session</th>
-                    <th>Pseudo</th>
-                    <th>Score</th>
-                    <th>Temps</th>
-                    <th>Moves</th>
-                    <th>Difficulté</th>
-                    <th>Date</th>
 
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Les scores seront insérés ici depuis le fichier json -->
-                <tr>
-                    <td>1</td>
-                    <td>Joueur1</td>
-                    <td>1500</td>
-                    <td>00:05:30</td>
-                    <td>25</td>
-                    <td>Facile</td>
-                    <td>2023-10-01</td>
-                </tr>
-            </tbody>
-        </table>
-
-        
+    <main>
+        <div class="scoreboard-container">
+            <h2>🏆 Meilleurs scores 🏆</h2>
+            
+            <table class="scores-table">
+                <thead>
+                    <tr>
+                        <th>Rang</th>
+                        <th>Pseudo</th>
+                        <th>Score</th>
+                        <th>Temps</th>
+                        <th>Moves</th>
+                        <th>Difficulté</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody id="scoresBody">
+                    <tr>
+                        <td>1</td>
+                        <td>Joueur1</td>
+                        <td>1500</td>
+                        <td>00:05:30</td>
+                        <td>25</td>
+                        <td>Facile</td>
+                        <td>2023-10-01</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </main>
+
     <script src="./js/scores.js"></script>
 </body>
 </html>
