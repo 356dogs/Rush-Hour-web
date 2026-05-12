@@ -75,6 +75,7 @@ app.post('/api/scores', (req, res) => {
         });
 
         scores = scores.slice(0, 100);
+        
 
         fs.writeFileSync(scoresPath, JSON.stringify(scores, null, 2));
 
