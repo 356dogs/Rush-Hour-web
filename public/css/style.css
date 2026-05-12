@@ -141,6 +141,7 @@ footer {
     cursor: pointer;
     transition: background 0.3s;
     display: inline-block;
+    color: white;
 }
 
 .nav-button:hover {
@@ -148,7 +149,6 @@ footer {
 }
 
 .nav-button a {
-    color: white;
     text-decoration: none;
     font-size: 14px;
     font-weight: bold;
