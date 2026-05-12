@@ -3,9 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <title>Tableau des scores</title>
+    <link rel="stylesheet" href="./css/style.css">
 </head>
 <body>
+    <header>
+        <div class="header-left">
+            <a href="https://www.groupe-insa.fr/" target="_blank">
+                <img src="assets/INSA.png" alt="INSA Logo">
+            </a>
+            <a href="https://www.uphf.fr/" target="_blank">
+                <img src="assets/UPHF.png" alt="UPHF Logo">
+            </a>
+        </div>
+        <h1>🚗 Rush Hour Web</h1>
+        <div class="header-right">
+            <button id="home"><a href="index.html">HOME</a></button>
+        </div>
+    </header>
     <h1>🏆 Meilleurs scores</h1>
-    <p>Les scores seront affichés ici via l'API.</p>
+    <main>
+        <table>
+            <thead>
+                <tr>
+                    <th>Rang</th>
+                    <th>Nom du joueur</th>
+                    <th>Score</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Les scores seront insérés ici depuis le fichier json -->
+                <tr>
+                    <td>1</td>
+                    <td>Joueur1</td>
+                    <td>1500</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <script src="INSER LE PATH DU JS"></script>
+    </main>
 </body>
 </html>
