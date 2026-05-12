@@ -2,6 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tableau des scores</title>
     <link rel="stylesheet" href="./css/style.css">
 </head>
@@ -21,13 +22,19 @@
         </div>
     </header>
     <h1>🏆 Meilleurs scores</h1>
-    <main>
+    <main id="scoresTable">
         <table>
             <thead>
                 <tr>
                     <th>Rang</th>
-                    <th>Nom du joueur</th>
+                    <th>ID Session</th>
+                    <th>Pseudo</th>
                     <th>Score</th>
+                    <th>Temps</th>
+                    <th>Moves</th>
+                    <th>Difficulté</th>
+                    <th>Date</th>
+
                 </tr>
             </thead>
             <tbody>
@@ -36,11 +43,16 @@
                     <td>1</td>
                     <td>Joueur1</td>
                     <td>1500</td>
+                    <td>00:05:30</td>
+                    <td>25</td>
+                    <td>Facile</td>
+                    <td>2023-10-01</td>
                 </tr>
             </tbody>
         </table>
 
-        <script src="INSER LE PATH DU JS"></script>
+        
     </main>
+    <script src="./js/scores.js"></script>
 </body>
 </html>
