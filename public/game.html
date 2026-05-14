@@ -2,30 +2,50 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rush Hour - Jeu</title>
     <link rel="stylesheet" href="./css/style.css">
 </head>
 <body>
-    <h1>Jeu Rush Hour (en construction)</h1>
-    <p>Dimitry va mettre le canvas/grille ici.</p>
-    <div id="plateauDeJeu">
-    </div>
-    <button onclick="alert('Test du jeu')">Tester déplacement voiture</button>
+    <video autoplay muted loop class="video-bg">
+        <source src="assets/redCarGIF.mp4" type="video/mp4">
+    </video>
+
+    <header>
+        <div class="header-left">
+            <a href="https://www.groupe-insa.fr/" target="_blank">
+                <img src="assets/INSA.png" alt="INSA Logo">
+            </a>
+            <a href="https://www.uphf.fr/" target="_blank">
+                <img src="assets/UPHF.png" alt="UPHF Logo">
+            </a>
+        </div>
+        
+        <h1>🚗 Rush Hour Web</h1>
+        
+        <div class="header-right">
+            <a href="index.html"><button class="nav-button">HOME</button></a>
+        </div>
+    </header>
+
+    <main>
+        <div id="plateauDeJeu"></div>
+    </main>
     <script src="./js/Case.js"></script>
     <script src="./js/Vehicule.js"></script>
     <script src="./js/Plateau.js"></script>
     <script>
-        const grille = grilleCustom1(vehicules);
-        grille.creationGrille(document.getElementById('plateauDeJeu'));
-        grille.creationVoisinage();
+    const grille = grilleCustom1(vehicules);
+    console.log(grille);
+    grille.creationGrille(document.getElementById('plateauDeJeu'));
+    grille.creationVoisinage();
 
-        grille.ajouterVehicule(0, 2, 2, 'Est');
-        grille.ajouterVehicule(1,5,3,'Est');
-        grille.ajouterVehicule(2, 3, 4, 'Ouest');
-        grille.ajouterVehicule(3, 1,1,'Sud');
-        grille.ajouterVehicule(5, 0, 3, 'Nord');
-        grille.ajouterVehicule(6, 0, 5, 'Nord');
+    grille.ajouterVehicule(0, 2, 2, 'Est');
+    grille.ajouterVehicule(1,5,3,'Est');
+    grille.ajouterVehicule(2, 3, 4, 'Ouest');
+    grille.ajouterVehicule(3, 1,1,'Sud');
+    grille.ajouterVehicule(5, 0, 3, 'Nord');
+    grille.ajouterVehicule(6, 0, 5, 'Nord');
     </script>
 </body>
-
 </html>

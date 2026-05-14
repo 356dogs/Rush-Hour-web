@@ -2,10 +2,61 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tableau des scores</title>
+    <link rel="stylesheet" href="./css/style.css">
 </head>
 <body>
-    <h1>🏆 Meilleurs scores</h1>
-    <p>Les scores seront affichés ici via l'API.</p>
+    <video autoplay muted loop class="video-bg">
+        <source src="assets/redCarGIF.mp4" type="video/mp4">
+    </video>
+    
+    <header>
+        <div class="header-left">
+            <a href="https://www.groupe-insa.fr/" target="_blank">
+                <img src="assets/INSA.png" alt="INSA Logo">
+            </a>
+            <a href="https://www.uphf.fr/" target="_blank">
+                <img src="assets/UPHF.png" alt="UPHF Logo">
+            </a>
+        </div>
+        <h1>🚗 Rush Hour Web</h1>
+        <div class="header-right">
+            <a href="index.html"><button class="nav-button">HOME</button></a>
+        </div>
+    </header>
+
+    <main>
+        <div class="scoreboard-container">
+            <h2>🏆 Meilleurs scores 🏆</h2>
+            
+            <table class="scores-table">
+                <thead>
+                    <tr>
+                        <th>Rang</th>
+                        <th>Pseudo</th>
+                        <th>Score</th>
+                        <th>Temps</th>
+                        <th>Moves</th>
+                        <th>Difficulté</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody id="scoresBody">
+                    <tr>
+                        <td>1</td>
+                        <td>Joueur1</td>
+                        <td>1500</td>
+                        <td>00:05:30</td>
+                        <td>25</td>
+                        <td>Facile</td>
+                        <td>2023-10-01</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <script src="./js/scores.js"></script>
 </body>
 </html>
