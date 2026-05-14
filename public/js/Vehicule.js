@@ -11,6 +11,16 @@ class Vehicule {
         }
     }
 
+    orientationADegrees() {
+        let orientationDegrees = {
+            "Nord": { deg: 0},
+            "Sud": { deg : 180},
+            "Est": { deg : 90},
+            "Ouest": { deg : 270}
+        };
+        return orientationDegrees[this.orientation].deg;
+    }
+
     etudeDeplacementPossible()
     {
         // regarde les déplacements possibles et active les cases correspondante
@@ -39,46 +49,49 @@ class Vehicule {
         }
     }
 
-    initImgVehicule(container) {
-        if (this.image) {
-            return;
-        }
-        const img = document.createElement('img');
-        img.classList.add('vehicule');
-        img.src = './assets/vehicule' + this.id + '.png';
-        img.style.position = 'absolute';
-        img.style.pointerEvents = 'none';
-        img.style.transition = 'transform 0.75s ease-in-out ';
-        img.style.transformOrigin = 'top left';
-        container.appendChild(img);
-        this.image = img;
-        this.container = container;
+    initImgVehicule(divGrille) {
+        const imgvehicule = document.createElement('img');
+        
+  
+        imgvehicule.classList.add('vehicules');
+        imgvehicule.src = './assets/vehicule' + this.id + '.png';
+        imgvehicule.style.transformOrigin = '50% 25%'; // rotation autour du centre de l'image
+        
+        let orientationOffset = {
+            "Nord": { offset: 5},
+            "Sud": { offset : -5},
+            "Est": { offset : -5},
+            "Ouest": { offset : 5}
+        };
+        let xImg = this.cases[0].y * 100; // position x en px
+        let yImg = this.cases[0].x * 100; // position y en px
+        if (this.orientation === "Nord" || this.orientation === "Sud") {
+            yImg += orientationOffset[this.orientation].offset;
+        } else {
+            xImg += orientationOffset[this.orientation].offset;
+        }       
+        
+        imgvehicule.style.transform = "translate(" + xImg + "px, " + yImg + "px) rotate(" + this.orientationADegrees() + "deg)";
+        divGrille.appendChild(imgvehicule);
+        this.image = imgvehicule;
     }
 
-    updateDOMPosition() {
-        if (!this.image || !this.cases[0]) {
-            return;
-        }
-        const allXs = this.cases.map(c => c.x);
-        const allYs = this.cases.map(c => c.y);
-        const minX = Math.min(...allXs);
-        const minY = Math.min(...allYs);
-        const anchorCase = this.cases.find(c => c.x === minX && c.y === minY);
-        if (!anchorCase) {
-            return;
-        }
-
-        const caseRect = anchorCase.divCase.getBoundingClientRect();
-        const parentRect = this.container.getBoundingClientRect();
-        const offsetX = caseRect.left - parentRect.left;
-        const offsetY = caseRect.top - parentRect.top;
-
-        const width = (this.orientation === 'Est' || this.orientation === 'Ouest') ? this.taille * anchorCase.divCase.offsetWidth : anchorCase.divCase.offsetWidth;
-        const height = (this.orientation === 'Nord' || this.orientation === 'Sud') ? this.taille * anchorCase.divCase.offsetHeight : anchorCase.divCase.offsetHeight;
-
-        this.image.style.width = width + 'px';
-        this.image.style.height = height + 'px';
-        this.image.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+    mettreAJourImgVehicule(distance, direction) 
+    {
+        let orientationOffset = {
+            "Nord": { offset: 5},
+            "Sud": { offset : -5},
+            "Est": { offset : -5},
+            "Ouest": { offset : 5}
+        };
+        let xImg = this.cases[0].y * 100; // position x en px
+        let yImg = this.cases[0].x * 100; // position y en px
+        if (this.orientation === "Nord" || this.orientation === "Sud") {
+            yImg += orientationOffset[this.orientation].offset;
+        } else {
+            xImg += orientationOffset[this.orientation].offset;
+        }      
+        this.image.style.transform = "translate(" + xImg + "px, " + yImg + "px) rotate(" + this.orientationADegrees() + "deg)";
     }
 
     deplacerVehicule(caseDestination) {
@@ -98,7 +111,7 @@ class Vehicule {
         for (let i = 0; i < this.cases.length; i++) {
             this.cases[i].vehicule = this;
         }
-        this.updateDOMPosition();
+        this.mettreAJourImgVehicule(nbDeplacements, direction);
     }
 
     calculDeplacementNecessaire(caseDestination)
@@ -168,8 +181,13 @@ class Vehicule {
 // partieVehicule : chiffre commençant à 0 (commence a la tête du véhicule et augmente a chaque partie du véhicule)
 var voitureRouge = new Vehicule(0, 2);
 var voitureBleue = new Vehicule(1, 2);
+var voitureVerte = new Vehicule(2, 2);
+var voitureOrange = new Vehicule(3, 2);
+var voitureViolette = new Vehicule(4, 2);
+var camionJaune = new Vehicule(5, 3);
+var camionVert = new Vehicule(6, 3);
 
-var vehicules = [voitureRouge,voitureBleue];
+var vehicules = [voitureRouge,voitureBleue,voitureVerte,voitureOrange,voitureViolette,camionJaune,camionVert];
 
 
 

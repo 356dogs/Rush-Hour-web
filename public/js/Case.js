@@ -24,9 +24,7 @@ class Case {
 
     setHighlightVisible(visible) {
         this.caseHighlight = visible;
-        if (this.highlightImg) {
-            this.highlightImg.style.display = visible ? 'block' : 'none';
-        }
+        this.highlightImg.style.display = visible ? 'block' : 'none';
     }
 }
 

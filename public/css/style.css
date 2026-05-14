@@ -47,12 +47,11 @@ body {
     z-index: 1;
     pointer-events: none; /* Permet de cliquer à travers l'image de highlight */
     opacity: 0.3;
-    size: 75%;
 }
 
-.vehicule {
+.vehicules {
     position: absolute;
     z-index: 2;
-    object-fit: cover;
     pointer-events: none;
+    transition: transform 0.55s ease-in-out;
 }

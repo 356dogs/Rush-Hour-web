@@ -56,13 +56,14 @@ class Plateau {
 
                 //background de la case
                 const background = document.createElement("img");
-                background.setAttribute("src", "/public/assets/backgroundCase.png");
-                background.setAttribute("height", "150");
-                background.setAttribute("width", "150");
+                background.setAttribute("src", "./assets/backgroundCase.png");
+                background.setAttribute("draggable", "false");
+                background.setAttribute("height", "150px");
+                background.setAttribute("width", "150px");
 
                 //img de highlight de la case
                 const highlight = document.createElement("img");
-                highlight.setAttribute("src", "/public/assets/highlight.png");
+                highlight.setAttribute("src", "./assets/highlight.png");
                 highlight.setAttribute("height", "100");
                 highlight.setAttribute("width", "100");
                 highlight.classList.add("highlight");
@@ -90,7 +91,6 @@ class Plateau {
                     this.vehiculeSelectionne.deplacerVehicule(this.grille[x][y]);
                     this.viderHighlight();
                     this.viderVehiculeSelectionne();
-                    console.log("Déplacement de this.vehiculeSelectionne vers : " + x + ", " + y);
                 }
                 else
                 {
@@ -101,17 +101,14 @@ class Plateau {
                 {
                     this.viderVehiculeSelectionne();
                     this.viderHighlight();
-                    console.log("ahah Véhicule cliqué : " + this.grille[x][y].vehicule.id);
                     this.vehiculeSelectionne = this.grille[x][y].vehicule;
                     this.vehiculeSelectionne.etudeDeplacementPossible();
                 }
             else{ //case vide
-                console.log("Case cliquée : " + x + ", " + y);
                 this.viderHighlight();
                 this.viderVehiculeSelectionne();
             }
-        console.log("vehicule selectionne : " + this.vehiculeSelectionne);
-
+        console.log("x : " + x + " y : " + y);
         }.bind(this));
     }
 
@@ -149,11 +146,7 @@ class Plateau {
             caseActuelle.vehicule = vehicule;
             vehicule.cases[i] = caseActuelle;
         }
-
-        if (this.divGrille) {
-            vehicule.initImgVehicule(this.divGrille);
-            vehicule.updateDOMPosition();
-        }
+        vehicule.initImgVehicule(this.divGrille);
     }
 
 }
