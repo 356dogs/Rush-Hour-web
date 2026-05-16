@@ -344,8 +344,8 @@ function grilleCustom1(listeVehicules)
     grille.ajouterVehicule(1,5,3,'Est');
     grille.ajouterVehicule(2, 3, 4, 'Ouest');
     grille.ajouterVehicule(3, 1,1,'Sud');
-    //grille.ajouterVehicule(5, 0, 3, 'Nord');
-    //grille.ajouterVehicule(6, 0, 5, 'Nord');
+    grille.ajouterVehicule(5, 0, 3, 'Nord');
+    grille.ajouterVehicule(6, 0, 5, 'Nord');
     
     return grille;
 }
