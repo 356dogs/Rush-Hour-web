@@ -2,14 +2,123 @@
 function randomInt(min, max) {return Math.floor(Math.random() * (max - min)) + min;}
 
 class Plateau {
-    constructor(nom, lignes, colonnes, listeVehicules) {
+    constructor(nom, lignes, colonnes, listeVehicules, difficulté,scoreDebut) {
         this.nom = nom;
         this.grille = [];
         this.lignes = lignes; 
         this.colonnes = colonnes;
         this.vehiculeSelectionne = null;
         this.listeVehicules = listeVehicules;
+        this.difficulté = difficulté;
         this.divGrille = null;
+        this.nbdeplacements = 0;
+        this.scoreDebut = scoreDebut;
+        this.score = scoreDebut;
+
+        this.timerSecondes = 0;
+        this.timerInterval = null;
+        
+        this.updateScoreDisplay();
+        this.demarreTimer();
+
+    }
+
+    demarreTimer() {
+        setTimeout(() => {
+        this.timerInterval = setInterval(() => {
+            this.timerSecondes++;
+            this.updateTexteTimer();
+            this.updateScoreDisplay();
+        }, 1000)}, 1000); // délai de 1 secondes avant de démarrer le timer
+    }
+
+    stopTimer() {
+        if (this.timerInterval) {
+            clearInterval(this.timerInterval);
+        }
+    }
+
+    updateTexteTimer() {
+        const minutes = Math.floor(this.timerSecondes / 60);
+        const seconds = this.timerSecondes % 60;
+        const timerElement = document.getElementById('timer');
+        if (timerElement) {
+            timerElement.textContent = 
+                String(minutes).padStart(2, '0') + ':' + 
+                String(seconds).padStart(2, '0');
+        }
+    }
+
+    updateMovesDisplay() {
+        const movesElement = document.getElementById('moves');
+        if (movesElement) {
+            movesElement.textContent = this.nbdeplacements;
+        }
+    }
+
+    calculerScore() {
+        // formule: base de 1000 - 5 * nbSecondes - 10 * nbdeplacements, avec un minimum de 10 points
+        this.score = this.scoreDebut - (this.timerSecondes * 5) - (this.nbdeplacements * 10); // évite un score négatif
+        if (this.score < 100) {
+            this.score = 100; // score minimum de 100
+        }
+        this.score = Math.round(this.score);
+    }
+
+    updateScoreDisplay() {
+        this.calculerScore();
+        const scoreElement = document.getElementById('score');
+        scoreElement.textContent = this.score;
+        console.log("Score mis à jour: " + this.score);
+    }
+
+    formaterTime(seconds) {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
+    }
+
+    async envoyerScoreAuServeur(playerName) {
+        if (!playerName) return { ok: false, error: 'Nom requis' };
+
+        // Ensure latest score calculation
+        this.calculerScore();
+
+        const payload = {
+            playerName: String(playerName).trim(),
+            score: this.score,
+            time: this.formaterTime(this.timerSecondes),
+            difficulty: this.difficulté,
+            moves: this.nbdeplacements
+        };
+
+        try {
+            const response = await fetch('/api/scores', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const bodyText = await response.text();
+            let data = null;
+            if (bodyText) {
+                try {
+                    data = JSON.parse(bodyText);
+                } catch (jsonError) {
+                    return {
+                        ok: false,
+                        status: response.status,
+                        error: `Réponse JSON invalide (${jsonError.message})`,
+                        body: bodyText
+                    };
+                }
+            }
+
+            return { ok: response.ok, data, status: response.status };
+        } catch (error) {
+            console.error('Erreur lors de l\'envoi du score:', error);
+            return { ok: false, error: String(error) };
+        }
     }
 
     creationVoisinage() {
@@ -89,6 +198,9 @@ class Plateau {
             if (this.grille[x][y].caseHighlight === true) { // case hihlight
                 if (this.vehiculeSelectionne) {
                     this.vehiculeSelectionne.deplacerVehicule(this.grille[x][y]);
+                    this.nbdeplacements++;
+                    this.updateMovesDisplay();
+                    this.updateScoreDisplay();
                     this.viderHighlight();
                     this.viderVehiculeSelectionne();
                 }
@@ -109,6 +221,10 @@ class Plateau {
                 this.viderVehiculeSelectionne();
             }
         console.log("x : " + x + " y : " + y);
+        if(this.listeVehicules[0].aGagner() === true) {
+            this.victoire();
+            return;
+        }
         }.bind(this));
     }
 
@@ -149,12 +265,90 @@ class Plateau {
         vehicule.initImgVehicule(this.divGrille);
     }
 
+    desactiverCases()
+    {
+        for (let x = 0; x < this.lignes; x++) {
+            for (let y = 0; y < this.colonnes; y++) {
+                this.grille[x][y].divCase.style.pointerEvents = "none";
+            }
+        }
+    }
+
+    victoire() {
+        this.stopTimer();
+        this.updateScoreDisplay();
+        this.desactiverCases();
+        // show the end-game form for the player to enter their name
+        this.afficherFormulaireFin();
+    }
+
+    afficherFormulaireFin() {
+        const fin = document.getElementById('finJeu');
+        const form = document.getElementById('scoreForm');
+        if (!fin || !form) return;
+
+        // populate readonly fields
+        const finalScore = document.getElementById('finalScore');
+        const finalTime = document.getElementById('finalTime');
+        const finalMoves = document.getElementById('finalMoves');
+        const diffField = document.getElementById('difficultyField');
+        const status = document.getElementById('saveStatus');
+
+        this.calculerScore();
+        if (finalScore) finalScore.value = this.score;
+        if (finalTime) finalTime.value = this.formaterTime(this.timerSecondes);
+        if (finalMoves) finalMoves.value = this.nbdeplacements;
+        if (diffField) diffField.value = this.difficulté;
+        if (status) status.textContent = '';
+
+        fin.style.display = 'block';
+
+        if (!this._formHandlersAttached) {
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const nameInput = document.getElementById('playerName');
+                const saveStatus = document.getElementById('saveStatus');
+                if (!nameInput || !nameInput.value.trim()) {
+                    if (saveStatus) saveStatus.textContent = 'Veuillez entrer un nom.';
+                    return;
+                }
+                if (saveStatus) saveStatus.textContent = 'Envoi en cours...';
+                const res = await this.envoyerScoreAuServeur(nameInput.value.trim());
+                if (res.ok) {
+                    if (saveStatus) saveStatus.textContent = 'Score enregistré!';
+                    fin.style.display = 'none';
+                    alert('Score sauvegardé! Position: ' + (res.data.position || '?'));
+                } else {
+                    const detail = res.body || res.error || (res.data && res.data.error) || 'Réponse non valide';
+                    if (saveStatus) saveStatus.textContent = 'Erreur: ' + detail;
+                    console.error('Score save failed', res);
+                }
+            });
+
+            const cancel = document.getElementById('cancelSave');
+            if (cancel) cancel.addEventListener('click', () => { fin.style.display = 'none'; });
+
+            this._formHandlersAttached = true;
+        }
+    }
+
 }
 
 function grilleCustom1(listeVehicules) 
 {    
-    let grilleCustom1 = new Plateau("Grille Custom 1", 6, 6, listeVehicules);
-    return grilleCustom1;
+    let grille = new Plateau("Grille Custom 1", 6, 6, listeVehicules, "Facile", 2000);
+    grille.creationGrille(document.getElementById('plateauDeJeu'));
+    grille.creationVoisinage();
+    grille.grille[2][5].caseVictoire = true;
+
+    grille.ajouterVehicule(0, 2, 2, 'Est');
+    grille.ajouterVehicule(1,5,3,'Est');
+    grille.ajouterVehicule(2, 3, 4, 'Ouest');
+    grille.ajouterVehicule(3, 1,1,'Sud');
+    //grille.ajouterVehicule(5, 0, 3, 'Nord');
+    //grille.ajouterVehicule(6, 0, 5, 'Nord');
+    
+    return grille;
 }
 
 

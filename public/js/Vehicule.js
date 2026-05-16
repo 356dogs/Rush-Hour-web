@@ -94,6 +94,15 @@ class Vehicule {
         this.image.style.transform = "translate(" + xImg + "px, " + yImg + "px) rotate(" + this.orientationADegrees() + "deg)";
     }
 
+    aGagner() {
+        for (let i = 0; i < this.cases.length; i++) {
+            if (this.cases[i].caseVictoire) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     deplacerVehicule(caseDestination) {
         // déplacer le véhicule à la case de destination.
         const [direction, nbDeplacements] = this.calculDeplacementNecessaire(caseDestination);

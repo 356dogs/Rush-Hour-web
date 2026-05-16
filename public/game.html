@@ -29,23 +29,41 @@
     </header>
 
     <main>
-        <div id="plateauDeJeu"></div>
+        <div class="game-container">
+            <div id="plateauDeJeu"></div>
+            <aside class="statsJeu">
+                <div class="stat-item">
+                    <h3>Temps</h3>
+                    <p id="timer">00:00</p>
+                </div>
+                <div class="stat-item">
+                    <h3>Déplacements</h3>
+                    <p id="moves">0</p>
+                </div>
+                <div class="stat-item">
+                    <h3>Score</h3>
+                    <p id="score">-</p>
+                </div>
+            </aside>
+                <aside class="fin-jeu" id="finJeu" style="display:none;">
+                    <h3>Bravo vous avez gagné. 🎉🎉</h3>
+                    <h3>Entrez un nom pour sauvegarder votre score.</h3>
+                    <form id="scoreForm">
+                        <input id="playerName" name="playerName" type="text" placeholder="Votre nom" required />
+                        <div style="display:flex;gap:8px;margin-top:12px;">
+                            <button type="Sauvegarder">Enregistrer</button>
+                            <button type="button" id="pasSauvegarder">Ne pas enregistrer</button>
+                        </div>
+                    </form>
+                    <p id="saveStatus" style="margin-top:8px;color:#fff"></p>
+                </aside>
+        </div>
     </main>
     <script src="./js/Case.js"></script>
     <script src="./js/Vehicule.js"></script>
     <script src="./js/Plateau.js"></script>
     <script>
-    const grille = grilleCustom1(vehicules);
-    console.log(grille);
-    grille.creationGrille(document.getElementById('plateauDeJeu'));
-    grille.creationVoisinage();
-
-    grille.ajouterVehicule(0, 2, 2, 'Est');
-    grille.ajouterVehicule(1,5,3,'Est');
-    grille.ajouterVehicule(2, 3, 4, 'Ouest');
-    grille.ajouterVehicule(3, 1,1,'Sud');
-    grille.ajouterVehicule(5, 0, 3, 'Nord');
-    grille.ajouterVehicule(6, 0, 5, 'Nord');
+    grilleCustom1(vehicules);
     </script>
 </body>
 </html>

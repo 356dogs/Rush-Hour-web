@@ -240,6 +240,100 @@ body {
     margin-top: 20px;
 }
 
+/* Game Container and Stats */
+.game-container {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+    justify-content: center;
+    margin-top: 80px;
+    margin-bottom: 60px;
+}
+
+.statsJeu {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    padding: 25px;
+    border-radius: 12px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    min-width: 180px;
+}
+
+.stat-item {
+    text-align: center;
+    color: white;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.stat-item h3 {
+    margin: 0 0 10px 0;
+    font-size: 1rem;
+    opacity: 0.9;
+    font-weight: 500;
+}
+
+.stat-item p {
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #ffeb3b;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+}
+
+/* End-game form */
+.fin-jeu {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(30px);
+    padding: 25px;
+    border-radius: 12px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    min-width: 180px;
+}
+
+.fin-jeu h3 {
+    margin: 0 0 8px 0;
+    color :rgb(255, 255, 255);
+}
+
+.fin-jeu form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    color : rgb(255, 255, 255);
+}
+
+.fin-jeu input[type="text"], .fin-jeu input[type="email"] {
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.05);
+    color: white;
+}
+
+.fin-jeu button {
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: none;
+    background: #006128;
+    color: rgb(1, 75, 17);
+    font-weight: 700;
+    cursor: pointer;
+    color: white;
+}
+
+.fin-jeu button#pasSauvegarder {
+    background: #cd1703;
+    
+}
+
 /* Style du Tableau des Scores */
 
 .scoreboard-container {
@@ -293,6 +387,7 @@ body {
     font-weight: bold;
     color: #e74c3c;
 }
+
 
 /*a revoir*/
 @media (max-width: 1100px) {
