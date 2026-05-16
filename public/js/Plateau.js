@@ -78,49 +78,6 @@ class Plateau {
         return String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
     }
 
-    async envoyerScoreAuServeur(playerName) {
-        if (!playerName) return { ok: false, error: 'Nom requis' };
-
-        // Ensure latest score calculation
-        this.calculerScore();
-
-        const payload = {
-            playerName: String(playerName).trim(),
-            score: this.score,
-            time: this.formaterTime(this.timerSecondes),
-            difficulty: this.difficulté,
-            moves: this.nbdeplacements
-        };
-
-        try {
-            const response = await fetch('/api/scores', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-
-            const bodyText = await response.text();
-            let data = null;
-            if (bodyText) {
-                try {
-                    data = JSON.parse(bodyText);
-                } catch (jsonError) {
-                    return {
-                        ok: false,
-                        status: response.status,
-                        error: `Réponse JSON invalide (${jsonError.message})`,
-                        body: bodyText
-                    };
-                }
-            }
-
-            return { ok: response.ok, data, status: response.status };
-        } catch (error) {
-            console.error('Erreur lors de l\'envoi du score:', error);
-            return { ok: false, error: String(error) };
-        }
-    }
-
     creationVoisinage() {
         for (let x = 0; x < this.lignes; x++) {
             for (let y = 0; y < this.colonnes; y++) {
@@ -332,6 +289,48 @@ class Plateau {
         }
     }
 
+    async envoyerScoreAuServeur(playerName) {
+        if (!playerName) return { ok: false, error: 'Nom requis' };
+
+        // Ensure latest score calculation
+        this.calculerScore();
+
+        const payload = {
+            playerName: String(playerName).trim(),
+            score: this.score,
+            time: this.formaterTime(this.timerSecondes),
+            difficulty: this.difficulté,
+            moves: this.nbdeplacements
+        };
+
+        try {
+            const response = await fetch('/api/scores', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const bodyText = await response.text();
+            let data = null;
+            if (bodyText) {
+                try {
+                    data = JSON.parse(bodyText);
+                } catch (jsonError) {
+                    return {
+                        ok: false,
+                        status: response.status,
+                        error: `Réponse JSON invalide (${jsonError.message})`,
+                        body: bodyText
+                    };
+                }
+            }
+
+            return { ok: response.ok, data, status: response.status };
+        } catch (error) {
+            console.error('Erreur lors de l\'envoi du score:', error);
+            return { ok: false, error: String(error) };
+        }
+    }
 }
 
 function grilleCustom1(listeVehicules) 
