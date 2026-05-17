@@ -10,27 +10,22 @@ const PORT = 3000;
 app.use(cors());
 app.use(express.json());
 
-// Servir tous les fichiers du dossier public 
+// Servir tous les fichiers du frontend
 app.use(express.static(path.join(process.cwd(), 'public')));
 
-// Route par défaut
+// Route par défaut (page d'accueil)
 app.get('/', (req, res) => {
     res.sendFile(path.join(process.cwd(), 'public/index.html'));
 });
 
-
-// ====================== SCORES ======================
+// ====================== API SCORES ======================
 const scoresPath = path.join(process.cwd(), 'server/data/scores.json');
 
-// Initialisation du fichier scores
+// Création automatique du fichier scores.json
 function initScoresFile() {
     const dir = path.dirname(scoresPath);
-    if (!fs.existsSync(dir)) {
-        fs.mkdirSync(dir, { recursive: true });
-    }
-    if (!fs.existsSync(scoresPath)) {
-        fs.writeFileSync(scoresPath, '[]', 'utf-8');
-    }
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+    if (!fs.existsSync(scoresPath)) fs.writeFileSync(scoresPath, '[]', 'utf-8');
 }
 initScoresFile();
 
@@ -45,7 +40,7 @@ app.get('/api/scores', (req, res) => {
     }
 });
 
-// Ajouter un score
+// Sauvegarder un score
 app.post('/api/scores', (req, res) => {
     try {
         const { playerName, score, time, difficulty, moves } = req.body;
@@ -68,14 +63,13 @@ app.post('/api/scores', (req, res) => {
 
         scores.push(newScore);
 
-        // Tri : meilleur score d'abord, puis meilleur temps
+        // Tri : meilleur score puis meilleur temps
         scores.sort((a, b) => {
             if (b.score !== a.score) return b.score - a.score;
             return a.time.localeCompare(b.time);
         });
 
-        scores = scores.slice(0, 100);
-        
+        scores = scores.slice(0, 100); // Top 100
 
         fs.writeFileSync(scoresPath, JSON.stringify(scores, null, 2));
 
@@ -90,21 +84,9 @@ app.post('/api/scores', (req, res) => {
     }
 });
 
-// Supprimer tous les scores 
-app.delete('/api/scores', (req, res) => {
-    try {
-        fs.writeFileSync(scoresPath, '[]');
-        res.json({ message: 'Tous les scores ont été supprimés' });
-    } catch (error) {
-        res.status(500).json({ error: "Erreur lors de la suppression" });
-    }
-});
-
 // ====================== LANCER LE SERVEUR ======================
 app.listen(PORT, () => {
-    console.log(`Serveur Rush Hour Web lancé avec succès !`);
-    console.log(`   → http://localhost:${PORT}`);
-    console.log(`   → Menu          : http://localhost:${PORT}`);
-    console.log(`   → Map           : http://localhost:${PORT}/api/map?diff=medium`);
-    console.log(`   → Scores        : http://localhost:${PORT}/api/scores`);
+    console.log(`Serveur Rush Hour Web lancé avec succès sur http://localhost:${PORT}`);
+    console.log(`   → Menu   : http://localhost:${PORT}`);
+    console.log(`   → Scores : http://localhost:${PORT}/api/scores`);
 });

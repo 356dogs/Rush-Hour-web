@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1779046967530,
+    "playerName": "jamila",
+    "score": 1860,
+    "time": "00:18",
+    "moves": 5,
+    "difficulty": "Facile",
+    "date": "2026-05-17T19:42:47.530Z"
+  },
+  {
+    "id": 1779048140417,
+    "playerName": "lola",
+    "score": 1800,
+    "time": "00:26",
+    "moves": 7,
+    "difficulty": "Facile",
+    "date": "2026-05-17T20:02:20.417Z"
+  },
+  {
+    "id": 1779046739838,
+    "playerName": "jamilulu",
+    "score": 745,
+    "time": "03:29",
+    "moves": 21,
+    "difficulty": "Facile",
+    "date": "2026-05-17T19:38:59.838Z"
+  }
+]

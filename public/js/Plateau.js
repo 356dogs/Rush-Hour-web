@@ -231,20 +231,18 @@ class Plateau {
         }
     }
 
-    victoire() {
+       victoire() {
         this.stopTimer();
         this.updateScoreDisplay();
         this.desactiverCases();
-        // show the end-game form for the player to enter their name
         this.afficherFormulaireFin();
     }
 
-    afficherFormulaireFin() {
+       afficherFormulaireFin() {
         const fin = document.getElementById('finJeu');
         const form = document.getElementById('scoreForm');
         if (!fin || !form) return;
 
-        // populate readonly fields
         const finalScore = document.getElementById('finalScore');
         const finalTime = document.getElementById('finalTime');
         const finalMoves = document.getElementById('finalMoves');
@@ -252,10 +250,11 @@ class Plateau {
         const status = document.getElementById('saveStatus');
 
         this.calculerScore();
+
         if (finalScore) finalScore.value = this.score;
         if (finalTime) finalTime.value = this.formaterTime(this.timerSecondes);
         if (finalMoves) finalMoves.value = this.nbdeplacements;
-        if (diffField) diffField.value = this.difficulté;
+        if (diffField) diffField.value = this.difficulté || 'Facile';
         if (status) status.textContent = '';
 
         fin.style.display = 'block';
@@ -265,70 +264,71 @@ class Plateau {
                 e.preventDefault();
                 const nameInput = document.getElementById('playerName');
                 const saveStatus = document.getElementById('saveStatus');
+
                 if (!nameInput || !nameInput.value.trim()) {
                     if (saveStatus) saveStatus.textContent = 'Veuillez entrer un nom.';
                     return;
                 }
+
                 if (saveStatus) saveStatus.textContent = 'Envoi en cours...';
+
                 const res = await this.envoyerScoreAuServeur(nameInput.value.trim());
+
                 if (res.ok) {
-                    if (saveStatus) saveStatus.textContent = 'Score enregistré!';
-                    fin.style.display = 'none';
-                    alert('Score sauvegardé! Position: ' + (res.data.position || '?'));
+                    if (saveStatus) saveStatus.textContent = 'Score enregistré avec succès !';
+                    setTimeout(() => {
+                        fin.style.display = 'none';
+                    }, 1500);
                 } else {
-                    const detail = res.body || res.error || (res.data && res.data.error) || 'Réponse non valide';
-                    if (saveStatus) saveStatus.textContent = 'Erreur: ' + detail;
-                    console.error('Score save failed', res);
+                    if (saveStatus) saveStatus.textContent = 'Erreur : ' + (res.error || 'Impossible de sauvegarder');
                 }
             });
 
-            const cancel = document.getElementById('cancelSave');
-            if (cancel) cancel.addEventListener('click', () => { fin.style.display = 'none'; });
+            const cancelBtn = document.getElementById('cancelSave');
+            if (cancelBtn) {
+                cancelBtn.addEventListener('click', () => {
+                    fin.style.display = 'none';
+                });
+            }
 
             this._formHandlersAttached = true;
         }
     }
 
-    async envoyerScoreAuServeur(playerName) {
-        if (!playerName) return { ok: false, error: 'Nom requis' };
+        async envoyerScoreAuServeur(playerName) {
+        if (!playerName || playerName.trim() === '') {
+            return { ok: false, error: 'Nom requis' };
+        }
 
-        // Ensure latest score calculation
         this.calculerScore();
 
         const payload = {
-            playerName: String(playerName).trim(),
+            playerName: playerName.trim(),
             score: this.score,
             time: this.formaterTime(this.timerSecondes),
-            difficulty: this.difficulté,
+            difficulty: this.difficulté || 'Facile',
             moves: this.nbdeplacements
         };
 
         try {
-            const response = await fetch('/api/scores', {
+            const response = await fetch('http://localhost:3000/api/scores', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
             });
 
-            const bodyText = await response.text();
-            let data = null;
-            if (bodyText) {
-                try {
-                    data = JSON.parse(bodyText);
-                } catch (jsonError) {
-                    return {
-                        ok: false,
-                        status: response.status,
-                        error: `Réponse JSON invalide (${jsonError.message})`,
-                        body: bodyText
-                    };
-                }
+            if (!response.ok) {
+                const text = await response.text();
+                throw new Error(text || 'Erreur serveur');
             }
 
-            return { ok: response.ok, data, status: response.status };
+            const data = await response.json();
+            console.log('Score sauvegardé avec succès', data);
+            return { ok: true, data };
+
         } catch (error) {
             console.error('Erreur lors de l\'envoi du score:', error);
-            return { ok: false, error: String(error) };
+            return { ok: false, error: error.message };
         }
     }
 }
